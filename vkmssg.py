@@ -1,49 +1,44 @@
-import vk
-import vk_api
-import pyfiglet
-from colorama import init, Fore, Back, Style
-import random
-import time
+import vk_api, time, colorama
+from colorama import Fore
 import os
 import sys
+from vk_api.longpoll import VkLongPoll, VkEventType
 
 banner = """
-██╗░░░██╗██╗░░██╗░█████╗░░█████╗░███╗░░░███╗███╗░░░███╗
-██║░░░██║██║░██╔╝██╔══██╗██╔══██╗████╗░████║████╗░████║
-╚██╗░██╔╝█████═╝░██║░░╚═╝██║░░██║██╔████╔██║██╔████╔██║
-░╚████╔╝░██╔═██╗░██║░░██╗██║░░██║██║╚██╔╝██║██║╚██╔╝██║
-░░╚██╔╝░░██║░╚██╗╚█████╔╝╚█████╔╝██║░╚═╝░██║██║░╚═╝░██║
-░░░╚═╝░░░╚═╝░░╚═╝░╚════╝░░╚════╝░╚═╝░░░░░╚═╝╚═╝░░░░░╚═╝
+██╗░░░██╗██╗░░██╗███╗░░░███╗░██████╗░██████╗░██████╗░
+██║░░░██║██║░██╔╝████╗░████║██╔════╝██╔════╝██╔════╝░
+╚██╗░██╔╝█████═╝░██╔████╔██║╚█████╗░╚█████╗░██║░░██╗░
+░╚████╔╝░██╔═██╗░██║╚██╔╝██║░╚═══██╗░╚═══██╗██║░░╚██╗
+░░╚██╔╝░░██║░╚██╗██║░╚═╝░██║██████╔╝██████╔╝╚██████╔╝
+░░░╚═╝░░░╚═╝░░╚═╝╚═╝░░░░░╚═╝╚═════╝░╚═════╝░░╚═════╝░
 """
 
-subscribe = """
-Подписаться на автора в Telegram? (yes/no)
-"""
+subscribe = "Подписаться на автора в Telegram? (yes/no)"
+
 print(Fore.CYAN + banner)
 print(Fore.CYAN + subscribe)
-
 choose = input('--> ')
 
 if choose == "yes":
     os.system("termux-open-url 'https://t.me/TerPackZ'")
-    print("Если вы подписались, перезапустите скрипт :)")
-    exit()
+    print("Если вы подписались, перезапустите скрипт и выберите no :)")
+
 else:
     token = input("Введите токен: ")
-    user_id = input("Введите айди страницы: ")
-    posts_id = input("Введите айди поста: ")
-    msgs = input("Введите сообщение: ")
-    session = vk.Session(access_token=token)
-    apivk = vk.API(session, v=5.95)
-    number = 0
-while True:
-    try:
-        print(apivk.wall.createComment(owner_id=user_id, post_id=posts_id, message=msgs,
-                                       guid=random.randint(0, 9999999999)))
-        print("Комментарий добавлен")
-        print(number)
-        number += 1
-    except:
-        pass
-    time.sleep(1.5)
+    users = input("Введите id: ")
+    vk_session = vk_api.VkApi(token=token)
+    api = vk_session.get_api()
+    def main():
+        try:
+            chats = input('Кол-во бесед: ')
+            spot = 0
+            while int(spot) < int(chats):
+                api.messages.createChat(user_ids=users, title="VKMSSG")
+                spot += 1
+                time.sleep(15)
+            print(spot)
+        except Exception as er:
+            print(er)
 
+
+    main()
